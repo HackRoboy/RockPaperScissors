@@ -345,15 +345,68 @@ do
    } while (pos5 >= 170);
 } 
 
-
-void loop() {
-
-  delay(2000);
-
-  beugen_strecken_alle_gleichzeitig();
-  delay(500);
+////////////////////////////////////////////////////////
+//////////////////    READY-STEADY-GO    ///////////////////
+////////////////////////////////////////////////////////
+void ready_steady_go(){
   strecken_beugen_alle_gleichzeitig();
   delay(2000);
+  beugen_strecken_alle_gleichzeitig();
+  delay(2000);
+}
 
+////////////////////////////////////////////////////////
+//////////////////    STONE    ///////////////////
+////////////////////////////////////////////////////////
+void make_stone(){
+  beugen_strecken_alle_gleichzeitig();
+}
+
+////////////////////////////////////////////////////////
+//////////////////    PAPPER    ///////////////////
+////////////////////////////////////////////////////////
+void make_papper(){
+  strecken_beugen_alle_gleichzeitig();
+}
+
+////////////////////////////////////////////////////////
+//////////////////    SCISSORS    ///////////////////
+////////////////////////////////////////////////////////
+void make_scissors(){
+  while(pos123 <= OBERES_LIMIT)
+  {
+    // ringfinger motors: 0, 1, 2, 3, 4 (pwm board)
+    // motor0: stretch, motor1: tilt left, motor2: finger flexion, motor3: fingertip flexion, motor4: tilt right
+    pwm.setPWM(0, 0, pos123);   
+    pwm.setPWM(1, 0, 600);  
+    pwm.setPWM(2, 0, pos123);
+    pwm.setPWM(3, 0, pos123);
+    pwm.setPWM(4, 0, 600);
+
+    // pinky motors: 5, 6, 7, 8, 9 (pwm2 board)
+    // motor5: stretch, motor6: tilt left, motor7: finger flexion, motor8: fingertip flexion, motor9: tilt right
+    pwm2.setPWM(5, 0, pos123);   
+    pwm2.setPWM(6, 0, 600);  
+    pwm2.setPWM(7, 0, pos123);
+    pwm2.setPWM(8, 0, pos123);
+    pwm2.setPWM(9, 0, 600);
+    
+    pos123+=SCHRITTWEITE;
+  }
+}
+
+
+
+
+void loop() {
+  beugen_strecken_alle_gleichzeitig();
+  delay(2000);
+//  make_scissors();
+//  for (int i = 0; i < 3; i++){
+//    ready_steady_go();
+//  } 
+  delay(5000);
+  beugen_strecken_alle_gleichzeitig();
+  delay(15000);
 }
 
