@@ -145,9 +145,9 @@ void beugen_strecken_alle_gleichzeitig(){
 ////////////////////////////////////////////////////////
 void ready_steady_go(){
   strecken_beugen_alle_gleichzeitig();
-   delay(500);
+  delay(1000);
   beugen_strecken_alle_gleichzeitig();
-  delay(500);
+  delay(1000);
 }
 
 ////////////////////////////////////////////////////////
@@ -208,14 +208,11 @@ void make_turn() {
 
 
 void loop() {
-  beugen_strecken_alle_gleichzeitig();
-  delay(2000);
+  delay(5000);
   for (int i = 0; i < 3; i++){
     ready_steady_go();
   } 
   make_turn();
-  delay(5000);
-  beugen_strecken_alle_gleichzeitig();
-  delay(15000);
 }
+
 
