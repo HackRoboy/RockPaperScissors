@@ -303,6 +303,7 @@ void make_turn() {
 
 
 void loop() {
+  readyPos = 600;
   beugen_strecken_alle_gleichzeitig(); // movement from flexion to stretch
   delay(2000);
   strecken_beugen_alle_gleichzeitig(); // movement from stretch to flexion
@@ -310,7 +311,7 @@ void loop() {
   ready_three();
   delay(1000);
   make_turn();
-  delay(10000);
+  delay(5000);
 }
 
 
