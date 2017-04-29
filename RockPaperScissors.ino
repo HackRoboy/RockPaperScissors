@@ -2,7 +2,8 @@
 #include <Adafruit_PWMServoDriver.h>
 
 //600 is the 'maximum' pulse length count (out of 4096)
-int pos123 = 600; // for the movements flexion & stretch
+int pos123 = 600;
+int readyPos = 600;
 
 long randNumber; // for turn
 
@@ -38,7 +39,7 @@ void setup() {
 ////////////////////////////////////////////////////////
 
 void strecken_beugen_alle_gleichzeitig(){
-  while( pos123 <= OBERES_LIMIT )
+  while(pos123 <= OBERES_LIMIT)
   {
     // indexfinger motors: 10, 11, 12, 13, 14 (pwm board)
     // motor10: stretch, motor11: tilt left, motor12: finger flexion, motor13: fingertip flexion, motor14: tilt right
@@ -82,8 +83,8 @@ void strecken_beugen_alle_gleichzeitig(){
     
     Serial.println("Position beugen alle:");
     Serial.println(pos123);
-                pos123+=SCHRITTWEITE; 
-       }
+    pos123 += SCHRITTWEITE; 
+  }
 }
 
 ////////////////////////////////////////////////////////
@@ -136,8 +137,102 @@ void beugen_strecken_alle_gleichzeitig(){
     
     Serial.println("Position beugen alle:");
     Serial.println(pos123);
-                pos123-=SCHRITTWEITE; 
-       }
+    pos123 -= SCHRITTWEITE;
+  }
+}
+
+////////////////////////////////////////////////////////
+//////////////////    PREPARE    ///////////////////
+////////////////////////////////////////////////////////
+
+void ready_three() {
+  readyPos = pos123;
+  while( readyPos >= UNTERES_LIMIT )
+  {
+    // indexfinger motors: 10, 11, 12, 13, 14 (pwm board)
+    // motor10: stretch, motor11: tilt left, motor12: finger flexion, motor13: fingertip flexion, motor14: tilt right
+    pwm.setPWM(10, 0, readyPos);   
+    pwm.setPWM(11, 0, 600);  
+    pwm.setPWM(12, 0, readyPos);
+    pwm.setPWM(13, 0, readyPos);
+    pwm.setPWM(14, 0, 600);
+
+    // middlefinger motors: 5, 6, 7, 8, 9 (pwm board)
+    // motor5: stretch, motor6: tilt left, motor7: finger flexion, motor8: fingertip flexion, motor9: tilt right
+    pwm.setPWM(5, 0, readyPos);   
+    pwm.setPWM(6, 0, 600);  
+    pwm.setPWM(7, 0, readyPos);
+    pwm.setPWM(8, 0, readyPos);
+    pwm.setPWM(9, 0, 600);
+
+    // ringfinger motors: 0, 1, 2, 3, 4 (pwm board)
+    // motor0: stretch, motor1: tilt left, motor2: finger flexion, motor3: fingertip flexion, motor4: tilt right
+    pwm.setPWM(0, 0, readyPos);   // ringfinger motors: 0, 1, 2, 3, 4 (pwm board)
+    pwm.setPWM(1, 0, 600);  
+    pwm.setPWM(2, 0, readyPos);
+    pwm.setPWM(3, 0, readyPos);
+    pwm.setPWM(4, 0, 600);
+
+    Serial.println("Position beugen alle:");
+    Serial.println(pos123);
+    readyPos -= SCHRITTWEITE; 
+  }
+
+  delay(1000);
+
+  pos123 = readyPos;
+  while(readyPos <= OBERES_LIMIT)
+  {
+    // ringfinger motors: 0, 1, 2, 3, 4 (pwm board)
+    // motor0: stretch, motor1: tilt left, motor2: finger flexion, motor3: fingertip flexion, motor4: tilt right
+    pwm.setPWM(0, 0, readyPos);   
+    pwm.setPWM(1, 0, 600);  
+    pwm.setPWM(2, 0, readyPos);
+    pwm.setPWM(3, 0, readyPos);
+    pwm.setPWM(4, 0, 600);
+    
+    Serial.println("Position beugen alle:");
+    Serial.println(readyPos);
+    readyPos += SCHRITTWEITE; 
+  }
+
+  delay(1000);
+
+  readyPos = pos123;
+  while(readyPos <= OBERES_LIMIT)
+  {
+    // middlefinger motors: 5, 6, 7, 8, 9 (pwm board)
+    // motor5: stretch, motor6: tilt left, motor7: finger flexion, motor8: fingertip flexion, motor9: tilt right
+    pwm.setPWM(5, 0, readyPos);   
+    pwm.setPWM(6, 0, 600);  
+    pwm.setPWM(7, 0, readyPos);
+    pwm.setPWM(8, 0, readyPos);
+    pwm.setPWM(9, 0, 600);
+    
+    Serial.println("Position beugen alle:");
+    Serial.println(readyPos);
+    readyPos += SCHRITTWEITE; 
+  }
+
+  delay(1000);
+
+  readyPos = pos123;
+  while(readyPos <= OBERES_LIMIT)
+  {
+    // indexfinger motors: 10, 11, 12, 13, 14 (pwm board)
+    // motor10: stretch, motor11: tilt left, motor12: finger flexion, motor13: fingertip flexion, motor14: tilt right
+    pwm.setPWM(10, 0, readyPos);   
+    pwm.setPWM(11, 0, 600);  
+    pwm.setPWM(12, 0, readyPos);
+    pwm.setPWM(13, 0, readyPos);
+    pwm.setPWM(14, 0, 600);
+    
+    Serial.println("Position beugen alle:");
+    Serial.println(readyPos);
+    readyPos += SCHRITTWEITE; 
+  }
+
+  pos123 = readyPos;
 }
 
 ////////////////////////////////////////////////////////
@@ -208,11 +303,14 @@ void make_turn() {
 
 
 void loop() {
-  delay(5000);
-  for (int i = 0; i < 3; i++){
-    ready_steady_go();
-  } 
+  beugen_strecken_alle_gleichzeitig(); // movement from flexion to stretch
+  delay(2000);
+  strecken_beugen_alle_gleichzeitig(); // movement from stretch to flexion
+  delay(2000);
+  ready_three();
+  delay(1000);
   make_turn();
+  delay(10000);
 }
 
 
